@@ -1,6 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from lsl_record import start_recording
-from play_tag_movie_new import start_stream
+from playMediaSendMarkers import start_stream
 import argparse
 
 
