@@ -5,6 +5,7 @@ import pandas as pd
 import time
 from pylsl import StreamInlet, resolve_byprop
 
+
 def output_recording(res, timestamps, markers, ch_names, output_filename):
     res = np.concatenate(res, axis=0)
     timestamps = np.array(timestamps)
@@ -18,7 +19,7 @@ def output_recording(res, timestamps, markers, ch_names, output_filename):
         ix = np.argmin(np.abs(marker[1] - timestamps))
         data.loc[ix, 'Marker'] = marker[0][0]
 
-    data.to_csv(output_filename, float_format='%.3f', index=False)
+    data.to_csv(output_filename.replace(':', '-'), float_format='%.3f', index=False)
 
     print('Done !')
 
@@ -45,18 +46,20 @@ def start_recording(output_filename):
     print("Start aquiring data")
     inlets = list()
     for i in range(len(streams)):
-        inlets[i] = StreamInlet(streams[i], max_chunklen=12)
+        inlets.append(StreamInlet(streams[i], max_chunklen=12))
 
-    inlet = inlets[0]
-    info = inlet.info()
-    description = info.desc()
+    deviceInfoList = list()
+    for i in range(len(inlets)):
+        deviceInfoList.append(inlets[i].info())
 
-    print(description)
-    print(info)
 
-    nchan = info.channel_count()
+    deviceConfig = inlets[0]
+    deviceInfo = deviceConfig.info()
+    deviceDescription = deviceInfo.desc()
 
-    ch = description.child('channels').first_child()
+    nchan = deviceInfo.channel_count()
+
+    ch = deviceDescription.child('channels').first_child()
     ch_names = [ch.child_value('label')]
     for i in range(1, nchan):
         ch = ch.next_sibling()
@@ -86,4 +89,5 @@ def start_recording(output_filename):
                 print("Marker 1 append")
 
     for i in range(len(streams)):
-        output_recording(results[i], timestamps[i], markers, ch_names, output_filename.replace('.', f'_{i}.'))
+        output_recording(results[i], timestamps[i], markers, ch_names,
+                         output_filename.replace('.', f'_{deviceInfoList[i].name()}.'))
