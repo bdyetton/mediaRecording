@@ -43,10 +43,16 @@ def start_recording(output_filename):
         raise (RuntimeError, "Cant find EEG stream")
 
     print("Start aquiring data")
-    inlet = StreamInlet(streams[0], max_chunklen=12)
+    inlets = list()
+    for i in range(len(streams)):
+        inlets[i] = StreamInlet(streams[i], max_chunklen=12)
 
+    inlet = inlets[0]
     info = inlet.info()
     description = info.desc()
+
+    print(description)
+    print(info)
 
     nchan = info.channel_count()
 
@@ -56,16 +62,17 @@ def start_recording(output_filename):
         ch = ch.next_sibling()
         ch_names.append(ch.child_value('label'))
 
-    res = []
-    timestamps = []
+    results = [[] for _ in range(len(streams))]
+    timestamps = [[] for _ in range(len(streams))]
     markers = []
     t_init = time.time()
     print('Start recording at time t=%.3f' % t_init)
     while True:
-        data, timestamp = inlet.pull_chunk(timeout=1.0, max_samples=12)
+        for i in range(len(streams)):
+            data, timestamp = inlets[i].pull_chunk(timeout=1.0, max_samples=12)
 
-        res.append(data)
-        timestamps.extend(timestamp)
+            results[i].append(data)
+            timestamps[i].extend(timestamp)
 
         if inlet_marker:
             marker, timestamp = inlet_marker.pull_sample(timeout=0.0)
@@ -78,4 +85,5 @@ def start_recording(output_filename):
                 markers.append([marker, timestamp])
                 print("Marker 1 append")
 
-    output_recording(res, timestamps, markers, ch_names, output_filename)
+    for i in range(len(streams)):
+        output_recording(results[i], timestamps[i], markers, ch_names, output_filename.replace('.', f'_{i}.'))
