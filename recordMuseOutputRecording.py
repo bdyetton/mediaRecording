@@ -18,6 +18,8 @@ def output_recording(res, timestamps, markers, ch_names, output_filename):
     for marker in markers:
         ix = np.argmin(np.abs(marker[1] - timestamps))
         data.loc[ix, 'Marker'] = marker[0][0]
+        print(output_filename)
+        print(marker)
 
     data.to_csv(output_filename.replace(':', '-'), float_format='%.3f', index=False)
 
@@ -51,6 +53,7 @@ def start_recording(output_filename):
     deviceInfoList = list()
     for i in range(len(inlets)):
         deviceInfoList.append(inlets[i].info())
+        print("Found " + deviceInfoList[i].name() + " headset")
 
 
     deviceConfig = inlets[0]
@@ -82,11 +85,11 @@ def start_recording(output_filename):
 
             if marker == [2]:
                 markers.append([marker, timestamp])
-                print("Marker 2 append")
+                print("Marker 2 append at ", timestamp)
                 break
             elif timestamp:
                 markers.append([marker, timestamp])
-                print("Marker 1 append")
+                print("Marker 1 append at ", timestamp)
 
     for i in range(len(streams)):
         output_recording(results[i], timestamps[i], markers, ch_names,
