@@ -16,5 +16,5 @@ def start_stream(filename):
     subprocess.call(['mpv', filename])
     outlet.push_sample([2], time.time())
 
-    time.sleep(5)
+    time.sleep(6)
 
