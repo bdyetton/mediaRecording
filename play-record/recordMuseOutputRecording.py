@@ -21,7 +21,7 @@ def output_recording(res, timestamps, markers, ch_names, output_filename):
         print(output_filename)
         print(marker)
 
-    data.to_csv(output_filename.replace(':', '-'), float_format='%.3f', index=False)
+    data.to_csv("../data/" + output_filename.replace(':', '-'), float_format='%.3f', index=False)
 
     print('Done !')
 
@@ -43,9 +43,9 @@ def start_recording(output_filename):
     streams = resolve_byprop('type', 'EEG', timeout=2)
 
     if len(streams) == 0:
-        raise (RuntimeError, "Cant find EEG stream")
+        raise (RuntimeError, "Can not find EEG stream")
 
-    print("Start aquiring data")
+    print("Start acquiring data")
     inlets = list()
     for i in range(len(streams)):
         inlets.append(StreamInlet(streams[i], max_chunklen=12))

@@ -13,7 +13,7 @@ def start_stream(filename):
     time.sleep(4)
 
     outlet.push_sample([1], time.time())
-    subprocess.call(['mpv', filename])
+    subprocess.call(['mpv', "../videos/" + filename])
     outlet.push_sample([2], time.time())
 
     time.sleep(6)
