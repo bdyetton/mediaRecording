@@ -1,7 +1,6 @@
 .vscode
 venv
 __pycache__
-.idea
 .git
 .idea/workspace.xml
 
