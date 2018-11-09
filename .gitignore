@@ -3,5 +3,6 @@ venv
 __pycache__
 .git
 .idea/workspace.xml
+.idea
 
 
