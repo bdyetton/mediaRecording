@@ -55,7 +55,6 @@ def start_recording(output_filename):
         deviceInfoList.append(inlets[i].info())
         print("Found " + deviceInfoList[i].name() + " headset")
 
-
     deviceConfig = inlets[0]
     deviceInfo = deviceConfig.info()
     deviceDescription = deviceInfo.desc()
