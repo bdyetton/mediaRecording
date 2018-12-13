@@ -4,5 +4,6 @@ __pycache__
 .git
 .idea/workspace.xml
 .idea
+play-record/mpv.exe
 
 
